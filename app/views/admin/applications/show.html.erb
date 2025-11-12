@@ -1,0 +1,170 @@
+<% content_for :title, @application.respond_to?(:name) ? @application.name : "Application" %>
+
+<div class="container-lg">
+  <div class="mb-6">
+    <div class="flex items-center space-x-4">
+      <%= link_to admin_applications_path, class: "btn-ghost text-sm py-1 px-3" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Applications
+      <% end %>
+    </div>
+
+    <div class="mt-4 flex items-center justify-between">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-50"><%= @application.respond_to?(:name) ? @application.name : "Application ##{@application.id}" %></h1>
+
+      <div class="flex items-center space-x-3">
+        <%= link_to edit_admin_application_path(@application.id), class: "btn-primary" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Edit
+        <% end %>
+
+        <%= link_to admin_application_path(@application.id),
+            method: :delete,
+            data: { confirm: "Are you sure you want to delete this application?" },
+            class: "btn-danger" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+          Delete
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Content -->
+  <div class="card bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+    <div class="card-body">
+      <div class="space-y-6">
+        <!-- Name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.name %></div>
+        </div>
+
+        <!-- Package name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Package name</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.package_name %></div>
+        </div>
+
+        <!-- Version -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Version</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.version %></div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+          <div class="prose prose-gray dark:prose-invert max-w-none">
+            <%= simple_format(@application.description) %>
+          </div>
+        </div>
+
+        <!-- Icon -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.icon %></div>
+        </div>
+
+        <!-- Download url -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Download url</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.download_url %></div>
+        </div>
+
+        <!-- File size -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">File size</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.file_size %></div>
+        </div>
+
+        <!-- File size bytes -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">File size bytes</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.file_size_bytes %></div>
+        </div>
+
+        <!-- Developer -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Developer</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.developer %></div>
+        </div>
+
+        <!-- Rating -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rating</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.rating %></div>
+        </div>
+
+        <!-- Downloads -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Downloads</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.downloads %></div>
+        </div>
+
+        <!-- Last updated -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last updated</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.last_updated&.strftime('%Y-%m-%d %H:%M') %></div>
+        </div>
+
+        <!-- Min android version -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Min android version</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.min_android_version %></div>
+        </div>
+
+        <!-- Permissions -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Permissions</label>
+          <div class="prose prose-gray dark:prose-invert max-w-none">
+            <%= simple_format(@application.permissions) %>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Features</label>
+          <div class="prose prose-gray dark:prose-invert max-w-none">
+            <%= simple_format(@application.features) %>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
+          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.category&.name %></div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="pt-6 border-t border-gray-200 dark:border-gray-600">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID</label>
+              <div class="text-sm text-gray-900 dark:text-gray-100 font-mono"><%= @application.id %></div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Created</label>
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <%= @application.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <span class="text-gray-400">(<%= time_ago_in_words(@application.created_at) %> ago)</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Updated</label>
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <%= @application.updated_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <span class="text-gray-400">(<%= time_ago_in_words(@application.updated_at) %> ago)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

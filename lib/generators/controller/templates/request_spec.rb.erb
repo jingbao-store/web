@@ -1,0 +1,79 @@
+require 'rails_helper'
+
+RSpec.describe "<%= plural_name.humanize %>", type: :request do
+
+  <%- if requires_authentication? -%>
+  let(:user) { create(:user) }
+  before { sign_in_as(user) }
+  <%- else -%>
+  # Uncomment this if controller need authentication
+  # let(:user) { create(:user) }
+  # before { sign_in_as(user) }
+  <%- end -%>
+
+  <%- if selected_actions.include?('index') -%>
+  describe "GET /<%= plural_name %>" do
+    it "returns http success" do
+      get <%= plural_name %>_path
+      expect(response).to be_success_with_view_check('index')
+    end
+  end
+  <%- end -%>
+
+  <%- if selected_actions.include?('show') -%>
+    <%- if single_resource? -%>
+  describe "GET /<%= singular_name %>" do
+    it "returns http success" do
+      get <%= singular_name %>_path
+      expect(response).to be_success_with_view_check('show')
+    end
+  end
+    <%- else -%>
+  describe "GET /<%= plural_name %>/:id" do
+    <%- if requires_authentication? -%>
+    let(:<%= singular_name %>_record) { create(:<%= singular_name %>, user: user) }
+    <%- else -%>
+    let(:<%= singular_name %>_record) { create(:<%= singular_name %>) }
+    <%- end %>
+
+    it "returns http success" do
+      get <%= singular_name %>_path(<%= singular_name %>_record)
+      expect(response).to be_success_with_view_check('show')
+    end
+  end
+    <%- end -%>
+  <%- end -%>
+
+  <%- if selected_actions.include?('new') -%>
+  describe "GET /<%= single_resource? ? singular_name : plural_name %>/new" do
+    it "returns http success" do
+      get new_<%= singular_name %>_path
+      expect(response).to be_success_with_view_check('new')
+    end
+  end
+  <% end -%>
+
+  <%- if selected_actions.include?('edit') -%>
+    <%- if single_resource? -%>
+  describe "GET /<%= singular_name %>/edit" do
+    it "returns http success" do
+      get edit_<%= singular_name %>_path
+      expect(response).to be_success_with_view_check('edit')
+    end
+  end
+    <%- else -%>
+  describe "GET /<%= plural_name %>/:id/edit" do
+    <%- if requires_authentication? -%>
+    let(:<%= singular_name %>_record) { create(:<%= singular_name %>, user: user) }
+    <%- else -%>
+    let(:<%= singular_name %>_record) { create(:<%= singular_name %>) }
+    <%- end %>
+
+    it "returns http success" do
+      get edit_<%= singular_name %>_path(<%= singular_name %>_record)
+      expect(response).to be_success_with_view_check('edit')
+    end
+  end
+    <%- end -%>
+  <%- end -%>
+end

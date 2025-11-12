@@ -1,0 +1,114 @@
+<div class="min-h-screen bg-surface p-4">
+  <div class="container mx-auto max-w-4xl">
+    <!-- Back Button -->
+    <div class="mb-4">
+      <%= link_to applications_path, class: "btn-neutral btn-sm" do %>
+        ← 返回应用列表
+      <% end %>
+    </div>
+
+    <!-- App Details Window -->
+    <div class="window-frame">
+      <div class="window-title-bar">
+        <span><%= @application.icon || "📦" %> <%= @application.name %></span>
+      </div>
+      <div class="window-content">
+        <!-- App Header -->
+        <div class="flex items-start gap-4 mb-6 pb-6 border-b-2 border-border">
+          <div class="text-6xl"><%= @application.icon || "📦" %></div>
+          <div class="flex-1">
+            <h1 class="text-3xl font-bold text-primary mb-2"><%= @application.name %></h1>
+            <p class="text-sm text-muted font-mono mb-3">
+              <%= @application.developer %> | <%= @application.category.name %>
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <div class="badge badge-secondary">v<%= @application.version %></div>
+              <% if @application.rating.present? %>
+                <div class="badge badge-warning">⭐ <%= number_with_precision(@application.rating, precision: 1) %></div>
+              <% end %>
+              <div class="badge badge-neutral">📥 <%= number_with_delimiter(@application.downloads) %> 下载</div>
+              <div class="badge badge-info"><%= @application.file_size || "未知大小" %></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+          <h2 class="text-lg font-bold text-primary mb-3">📝 应用介绍</h2>
+          <p class="text-sm text-secondary font-mono leading-relaxed whitespace-pre-wrap"><%= @application.description || "暂无详细介绍" %></p>
+        </div>
+
+        <!-- Features -->
+        <% if @application.features_array.any? %>
+          <div class="mb-6">
+            <h2 class="text-lg font-bold text-primary mb-3">✨ 主要功能</h2>
+            <ul class="space-y-1">
+              <% @application.features_array.each do |feature| %>
+                <li class="text-sm text-secondary font-mono">• <%= feature %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Technical Info -->
+        <div class="mb-6">
+          <h2 class="text-lg font-bold text-primary mb-3">ℹ️ 技术信息</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="card">
+              <div class="card-body">
+                <p class="text-xs text-muted font-mono mb-1">包名</p>
+                <p class="text-sm text-primary font-mono break-all"><%= @application.package_name %></p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <p class="text-xs text-muted font-mono mb-1">最低系统版本</p>
+                <p class="text-sm text-primary font-mono">Android <%= @application.min_android_version || "未知" %></p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <p class="text-xs text-muted font-mono mb-1">更新时间</p>
+                <p class="text-sm text-primary font-mono"><%= @application.last_updated&.strftime("%Y-%m-%d") || "未知" %></p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <p class="text-xs text-muted font-mono mb-1">文件大小</p>
+                <p class="text-sm text-primary font-mono"><%= @application.file_size || "未知" %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permissions -->
+        <% if @application.permissions_array.any? %>
+          <div class="mb-6">
+            <h2 class="text-lg font-bold text-primary mb-3">🔒 所需权限</h2>
+            <div class="flex flex-wrap gap-2">
+              <% @application.permissions_array.each do |permission| %>
+                <div class="badge badge-neutral"><%= permission %></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Download Button -->
+        <div class="pt-6 border-t-2 border-border">
+          <% if @application.download_url.present? %>
+            <%= link_to @application.download_url, class: "btn-primary btn-lg w-full text-center", target: "_blank" do %>
+              📥 下载APK (<%= @application.file_size || "未知大小" %>)
+            <% end %>
+            <p class="text-xs text-muted text-center mt-3 font-mono">
+              下载后请通过镜宝APP安装到您的智能眼镜设备
+            </p>
+          <% else %>
+            <div class="alert alert-warning">
+              <p class="font-mono">暂无下载链接，请联系管理员。</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

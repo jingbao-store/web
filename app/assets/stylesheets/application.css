@@ -1,0 +1,616 @@
+@tailwind base;
+@tailwind components;
+
+/* Retro Windows Design System Components */
+@layer components {
+
+  /*
+   * Retro Windows Design System Variables
+   *
+   * Theme: Windows 95/98 nostalgic computing look
+   * - Soft gray backgrounds
+   * - Clear window frames with borders
+   * - Skeuomorphic buttons with subtle shadows
+   * - Bitmap icons style
+   * - Monospaced fonts
+   * - Crisp borders
+   *
+   * Usage:
+   * - Text: text-primary/secondary/muted
+   * - Surface: surface/surface-elevated
+   * - Brand: primary/secondary
+   * - Status: success/warning/danger/info
+   *
+   * ⚠️ NEVER use direct colors: text-white, bg-white, text-black, bg-black, etc.
+   * ⚠️ Use semantic variables only for maintainability and theme consistency.
+   */
+  :root {
+    /* Retro Windows Primary Colors - Teal accent inspired by classic Windows */
+    --color-primary: 180 65% 45%;
+    --color-primary-light: 180 60% 55%;
+    --color-primary-dark: 180 70% 35%;
+
+    /* Secondary - Classic Windows purple/blue */
+    --color-secondary: 240 55% 55%;
+    --color-secondary-light: 240 60% 65%;
+    --color-secondary-dark: 240 60% 45%;
+
+    /* Text colors - High contrast for retro readability */
+    --color-text-primary: 0 0% 10%;      /* Near black, crisp text */
+    --color-text-secondary: 0 0% 30%;    /* Dark gray for body text */
+    --color-text-muted: 0 0% 50%;        /* Mid gray for captions */
+
+    /* Surface colors - Classic Windows gray palette */
+    --color-surface: 0 0% 95%;           /* Light gray background (Windows desktop) */
+    --color-surface-elevated: 0 0% 88%;  /* Slightly darker gray (window chrome) */
+    --color-border: 0 0% 70%;            /* Crisp gray borders */
+
+    /* Neutral color - retro mid-gray */
+    --color-neutral: 0 0% 60%;
+
+    /* Status colors - Vibrant yet retro-appropriate */
+    --color-success: 140 70% 40%;
+    --color-warning: 42 95% 50%;
+    --color-danger: 0 80% 50%;
+    --color-info: 210 90% 50%;
+
+    /* Status background colors - subtle tints */
+    --color-success-bg: 140 50% 92%;
+    --color-warning-bg: 42 100% 92%;
+    --color-danger-bg: 0 70% 95%;
+    --color-info-bg: 210 80% 95%;
+
+    /* Fonts - Monospace for retro computing feel */
+    --font-family-sans: 'Courier New', 'Lucida Console', 'Monaco', monospace;
+    --font-family-mono: 'Courier New', 'Consolas', 'Monaco', monospace;
+
+    /* Border radius - Minimal/sharp for Windows 95 look */
+    --border-radius-sm: 0.125rem;
+    --border-radius: 0.125rem;
+    --border-radius-md: 0.25rem;
+    --border-radius-lg: 0.375rem;
+    --border-radius-xl: 0.5rem;
+
+    /* Shadows - Skeuomorphic, subtle 3D effects */
+    --shadow-xs: 1px 1px 0 rgb(0 0 0 / 0.15);
+    --shadow-sm: 2px 2px 0 rgb(0 0 0 / 0.2), inset 1px 1px 0 rgb(255 255 255 / 0.5);
+    --shadow: 2px 2px 4px rgb(0 0 0 / 0.25);
+    --shadow-md: 3px 3px 6px rgb(0 0 0 / 0.25);
+    --shadow-lg: 4px 4px 8px rgb(0 0 0 / 0.3);
+    --shadow-xl: 6px 6px 12px rgb(0 0 0 / 0.35);
+
+    /* Retro-specific: Inset shadows for pressed buttons */
+    --shadow-inset: inset 1px 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-raised: inset 1px 1px 0 rgb(255 255 255 / 0.6), inset -1px -1px 0 rgb(0 0 0 / 0.15);
+  }
+
+  /*
+   * Dark Mode - Retro Windows dark theme (Windows 3.1 inspired)
+   */
+  .dark {
+    /* Dark mode brand colors - slightly brighter for contrast */
+    --color-primary: 180 60% 55%;
+    --color-primary-light: 180 55% 65%;
+    --color-primary-dark: 180 65% 45%;
+
+    --color-secondary: 240 50% 65%;
+    --color-secondary-light: 240 55% 75%;
+    --color-secondary-dark: 240 55% 55%;
+
+    /* Text colors - high contrast on dark */
+    --color-text-primary: 0 0% 95%;
+    --color-text-secondary: 0 0% 80%;
+    --color-text-muted: 0 0% 60%;
+
+    /* Surface colors - dark gray system */
+    --color-surface: 0 0% 12%;
+    --color-surface-elevated: 0 0% 18%;
+    --color-border: 0 0% 30%;
+
+    /* Status colors - bright for dark backgrounds */
+    --color-success: 140 75% 50%;
+    --color-warning: 42 95% 60%;
+    --color-danger: 0 80% 60%;
+    --color-info: 210 85% 60%;
+
+    /* Status background colors - semi-transparent for dark */
+    --color-success-bg: 140 75% 50% / 0.15;
+    --color-warning-bg: 42 95% 60% / 0.15;
+    --color-danger-bg: 0 80% 60% / 0.15;
+    --color-info-bg: 210 85% 60% / 0.15;
+
+    --color-neutral: 0 0% 65%;
+
+    /* Shadows for dark mode */
+    --shadow-xs: 1px 1px 0 rgb(0 0 0 / 0.5);
+    --shadow-sm: 2px 2px 0 rgb(0 0 0 / 0.6), inset 1px 1px 0 rgb(255 255 255 / 0.1);
+    --shadow: 2px 2px 4px rgb(0 0 0 / 0.4);
+    --shadow-md: 3px 3px 6px rgb(0 0 0 / 0.4);
+    --shadow-lg: 4px 4px 8px rgb(0 0 0 / 0.5);
+    --shadow-xl: 6px 6px 12px rgb(0 0 0 / 0.6);
+  }
+
+  /* Retro Button Components - Skeuomorphic 3D style */
+  .btn {
+    @apply inline-flex items-center justify-center font-medium transition-all duration-100 focus:outline-none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-sans);
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    border: 2px solid;
+    outline: none;
+    position: relative;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none !important;
+  }
+
+  .btn.loading {
+    cursor: wait;
+    pointer-events: none;
+  }
+
+  .btn:focus-visible {
+    outline: 2px dotted hsl(var(--color-text-primary));
+    outline-offset: 2px;
+  }
+
+  /* Retro pressed effect */
+  .btn:active:not(:disabled) {
+    box-shadow: var(--shadow-inset) !important;
+    transform: translate(1px, 1px);
+  }
+
+  .btn-primary {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-primary));
+    border-color: hsl(var(--color-primary-dark));
+    border-top-color: hsl(var(--color-primary-light));
+    border-left-color: hsl(var(--color-primary-light));
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: hsl(var(--color-primary-light));
+  }
+
+  .btn-primary:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  .btn-secondary,
+  .btn-info {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-secondary));
+    border-color: hsl(var(--color-secondary-dark));
+    border-top-color: hsl(var(--color-secondary-light));
+    border-left-color: hsl(var(--color-secondary-light));
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-secondary:hover:not(:disabled),
+  .btn-info:hover:not(:disabled) {
+    background-color: hsl(var(--color-secondary-light));
+  }
+
+  .btn-secondary:disabled,
+  .btn-info:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  .btn-neutral {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    border-top-color: hsl(0 0% 100%);
+    border-left-color: hsl(0 0% 100%);
+    color: hsl(var(--color-text-primary));
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-neutral:hover:not(:disabled) {
+    background-color: hsl(var(--color-surface-elevated));
+    filter: brightness(1.05);
+  }
+
+  .btn-neutral:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  .btn-success {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-success));
+    border-color: hsl(140 70% 30%);
+    border-top-color: hsl(140 70% 50%);
+    border-left-color: hsl(140 70% 50%);
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-success:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  .btn-success:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  .btn-warning {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-warning));
+    border-color: hsl(42 95% 40%);
+    border-top-color: hsl(42 95% 60%);
+    border-left-color: hsl(42 95% 60%);
+    color: hsl(0 0% 10%);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-warning:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  .btn-warning:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  .btn-danger,
+  .btn-error {
+    @apply btn px-4 py-2 text-sm;
+    background-color: hsl(var(--color-danger));
+    border-color: hsl(0 80% 40%);
+    border-top-color: hsl(0 80% 60%);
+    border-left-color: hsl(0 80% 60%);
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-danger:hover:not(:disabled),
+  .btn-error:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  .btn-danger:disabled,
+  .btn-error:disabled {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-muted));
+  }
+
+  /* Button sizes */
+  .btn-xs {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+
+  .btn-xl {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* Retro Card Components - Window style */
+  .card {
+    @apply rounded overflow-hidden;
+    background-color: hsl(var(--color-surface));
+    border: 2px solid hsl(var(--color-border));
+    border-top-color: hsl(0 0% 100% / 0.5);
+    border-left-color: hsl(0 0% 100% / 0.5);
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    @apply px-4 py-3 font-bold text-sm;
+    background: linear-gradient(to bottom, hsl(var(--color-primary-light)), hsl(var(--color-primary)));
+    color: hsl(0 0% 100%);
+    border-bottom: 2px solid hsl(var(--color-primary-dark));
+  }
+
+  .card-body {
+    @apply p-4;
+    background-color: hsl(var(--color-surface));
+  }
+
+  .card-footer {
+    @apply px-4 py-3;
+    background-color: hsl(var(--color-surface-elevated));
+    border-top: 2px solid hsl(var(--color-border));
+  }
+
+  /* Retro elevated card variant */
+  .card-elevated {
+    @apply card;
+    background-color: hsl(var(--color-surface-elevated));
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Alert Components - Retro message boxes */
+  .alert {
+    @apply p-4 mb-4 rounded border-2 font-mono text-sm;
+    box-shadow: var(--shadow);
+  }
+
+  .alert-success {
+    @apply alert;
+    background-color: hsl(var(--color-success-bg));
+    border-color: hsl(var(--color-success));
+    color: hsl(var(--color-success));
+  }
+
+  .alert-warning {
+    @apply alert;
+    background-color: hsl(var(--color-warning-bg));
+    border-color: hsl(var(--color-warning));
+    color: hsl(42 95% 30%);
+  }
+
+  .alert-danger,
+  .alert-error {
+    @apply alert;
+    background-color: hsl(var(--color-danger-bg));
+    border-color: hsl(var(--color-danger));
+    color: hsl(var(--color-danger));
+  }
+
+  .alert-info {
+    @apply alert;
+    background-color: hsl(var(--color-info-bg));
+    border-color: hsl(var(--color-info));
+    color: hsl(var(--color-info));
+  }
+
+  /* Badge Components - Retro labels */
+  .badge {
+    @apply inline-flex items-center px-2 py-1 text-xs font-bold rounded-sm border;
+    font-family: var(--font-family-mono);
+  }
+
+  .badge-primary {
+    @apply badge;
+    background-color: hsl(var(--color-primary));
+    border-color: hsl(var(--color-primary-dark));
+    color: hsl(0 0% 100%);
+  }
+
+  .badge-secondary {
+    @apply badge;
+    background-color: hsl(var(--color-secondary));
+    border-color: hsl(var(--color-secondary-dark));
+    color: hsl(0 0% 100%);
+  }
+
+  .badge-success {
+    @apply badge;
+    background-color: hsl(var(--color-success));
+    border-color: hsl(140 70% 30%);
+    color: hsl(0 0% 100%);
+  }
+
+  .badge-warning {
+    @apply badge;
+    background-color: hsl(var(--color-warning));
+    border-color: hsl(42 95% 40%);
+    color: hsl(0 0% 10%);
+  }
+
+  .badge-danger {
+    @apply badge;
+    background-color: hsl(var(--color-danger));
+    border-color: hsl(0 80% 40%);
+    color: hsl(0 0% 100%);
+  }
+
+  .badge-info {
+    @apply badge;
+    background-color: hsl(var(--color-info));
+    border-color: hsl(210 90% 40%);
+    color: hsl(0 0% 100%);
+  }
+
+  .badge-neutral {
+    @apply badge;
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-primary));
+  }
+
+  /* Form Components - Retro input fields */
+  .form-input,
+  .form-textarea,
+  .form-select {
+    @apply w-full px-3 py-2 text-sm rounded-sm;
+    font-family: var(--font-family-sans);
+    background-color: hsl(0 0% 100%);
+    border: 2px solid hsl(var(--color-border));
+    border-top-color: hsl(0 0% 60%);
+    border-left-color: hsl(0 0% 60%);
+    box-shadow: inset 1px 1px 2px rgb(0 0 0 / 0.1);
+    color: hsl(var(--color-text-primary));
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: 2px dotted hsl(var(--color-primary));
+    outline-offset: 2px;
+    border-color: hsl(var(--color-primary));
+  }
+
+  .form-label {
+    @apply block text-sm font-bold mb-1;
+    color: hsl(var(--color-text-primary));
+    font-family: var(--font-family-sans);
+  }
+
+  .form-error {
+    @apply mt-1 text-xs;
+    color: hsl(var(--color-danger));
+    font-family: var(--font-family-mono);
+  }
+
+  .form-help {
+    @apply mt-1 text-xs;
+    color: hsl(var(--color-text-muted));
+    font-family: var(--font-family-mono);
+  }
+
+  .form-checkbox,
+  .form-radio {
+    @apply rounded-sm;
+    border: 2px solid hsl(var(--color-border));
+  }
+
+  /* Dark mode form adjustments */
+  .dark .form-input,
+  .dark .form-textarea,
+  .dark .form-select {
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-primary));
+  }
+
+  /* Pagination - Retro style */
+  .pagination {
+    @apply flex items-center gap-1;
+  }
+
+  .pagination a,
+  .pagination span {
+    @apply px-3 py-1 text-sm border-2 rounded-sm;
+    font-family: var(--font-family-mono);
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    border-top-color: hsl(0 0% 100% / 0.5);
+    border-left-color: hsl(0 0% 100% / 0.5);
+    color: hsl(var(--color-text-primary));
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+  }
+
+  .pagination a:hover {
+    background-color: hsl(var(--color-primary-light));
+    color: hsl(0 0% 100%);
+  }
+
+  .pagination .active {
+    background-color: hsl(var(--color-primary));
+    border-color: hsl(var(--color-primary-dark));
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow-inset);
+  }
+
+  .pagination .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Navbar - Retro title bar style */
+  .navbar {
+    @apply flex items-center justify-between px-4 py-2 border-b-2;
+    background: linear-gradient(to bottom, hsl(var(--color-primary)), hsl(var(--color-primary-dark)));
+    border-color: hsl(var(--color-primary-dark));
+    color: hsl(0 0% 100%);
+    box-shadow: var(--shadow);
+  }
+
+  .navbar-brand {
+    @apply text-lg font-bold;
+    font-family: var(--font-family-mono);
+    color: hsl(0 0% 100%);
+    text-decoration: none;
+  }
+
+  .navbar-link {
+    @apply px-3 py-1 text-sm font-bold rounded-sm;
+    font-family: var(--font-family-mono);
+    color: hsl(0 0% 100%);
+    text-decoration: none;
+    transition: background-color 0.1s;
+  }
+
+  .navbar-link:hover {
+    background-color: hsl(var(--color-primary-light));
+  }
+
+  /* Table - Retro grid style */
+  .table {
+    @apply w-full text-sm border-2;
+    font-family: var(--font-family-mono);
+    border-color: hsl(var(--color-border));
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .table th {
+    @apply px-4 py-2 font-bold text-left border-b-2;
+    background-color: hsl(var(--color-surface-elevated));
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-primary));
+  }
+
+  .table td {
+    @apply px-4 py-2 border-b;
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text-secondary));
+  }
+
+  .table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .table tbody tr:hover {
+    background-color: hsl(var(--color-surface-elevated));
+  }
+
+  /* Retro separator/divider */
+  .divider {
+    @apply my-4;
+    height: 2px;
+    background: linear-gradient(to right, transparent, hsl(var(--color-border)), transparent);
+  }
+
+  /* Retro container with window frame effect */
+  .window-frame {
+    @apply rounded-sm overflow-hidden;
+    border: 2px solid hsl(var(--color-border));
+    border-top-color: hsl(0 0% 100% / 0.5);
+    border-left-color: hsl(0 0% 100% / 0.5);
+    box-shadow: var(--shadow-md);
+  }
+
+  .window-title-bar {
+    @apply px-4 py-2 flex items-center justify-between font-bold text-sm;
+    background: linear-gradient(to bottom, hsl(var(--color-primary-light)), hsl(var(--color-primary)));
+    color: hsl(0 0% 100%);
+    font-family: var(--font-family-mono);
+  }
+
+  .window-content {
+    @apply p-4;
+    background-color: hsl(var(--color-surface));
+  }
+}
+
+@tailwind utilities;

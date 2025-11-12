@@ -1,0 +1,153 @@
+<div class="min-h-screen bg-surface">
+  <div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="window-frame max-w-4xl mx-auto mb-8">
+      <div class="window-title-bar">
+        <span>📱 镜宝应用商店 - JingBao App Store</span>
+        <div class="flex gap-1">
+          <div class="w-4 h-4 border-2 border-surface bg-danger"></div>
+          <div class="w-4 h-4 border-2 border-surface bg-warning"></div>
+          <div class="w-4 h-4 border-2 border-surface bg-success"></div>
+        </div>
+      </div>
+      <div class="window-content text-center">
+        <h1 class="text-4xl font-bold text-primary mb-4">镜宝应用商店</h1>
+        <p class="text-xl text-secondary mb-2">一键安装，畅享智能眼镜应用生态</p>
+        <p class="text-base text-muted font-mono mb-6">Your Smart Glasses App Marketplace</p>
+        
+        <div class="flex justify-center gap-4">
+          <% if Current.user %>
+            <%= link_to applications_path, class: "btn-primary btn-lg" do %>
+              📚 浏览应用
+            <% end %>
+          <% else %>
+            <%= link_to sign_up_path, class: "btn-primary btn-lg" do %>
+              🚀 立即注册
+            <% end %>
+            <%= link_to sign_in_path, class: "btn-secondary btn-lg" do %>
+              🔑 登录
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Window -->
+    <% categories = Category.ordered %>
+    <% apps_count = Application.count %>
+    
+    <div class="window-frame max-w-4xl mx-auto mb-8">
+      <div class="window-title-bar">
+        <span>📊 应用统计</span>
+      </div>
+      <div class="window-content">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="card">
+            <div class="card-body text-center">
+              <div class="text-3xl font-bold text-primary mb-1"><%= categories.count %></div>
+              <div class="text-sm text-muted font-mono">应用分类</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body text-center">
+              <div class="text-3xl font-bold text-primary mb-1"><%= apps_count %></div>
+              <div class="text-sm text-muted font-mono">应用总数</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body text-center">
+              <div class="text-3xl font-bold text-primary mb-1"><%= Application.sum(:downloads) %></div>
+              <div class="text-sm text-muted font-mono">总下载量</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body text-center">
+              <div class="text-3xl font-bold text-primary mb-1">Rokid</div>
+              <div class="text-sm text-muted font-mono">已验证设备</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="window-frame max-w-4xl mx-auto mb-8">
+      <div class="window-title-bar">
+        <span>🗂️ 应用分类</span>
+      </div>
+      <div class="window-content">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <% categories.each do |category| %>
+            <% if Current.user %>
+              <%= link_to applications_path(category_id: category.id), class: "btn-neutral py-4 flex flex-col items-center" do %>
+                <span class="text-2xl mb-2"><%= category.icon %></span>
+                <span class="text-sm"><%= category.name %></span>
+                <span class="text-xs text-muted">(<%= category.applications.count %>)</span>
+              <% end %>
+            <% else %>
+              <div class="btn-neutral py-4 flex flex-col items-center opacity-75">
+                <span class="text-2xl mb-2"><%= category.icon %></span>
+                <span class="text-sm"><%= category.name %></span>
+                <span class="text-xs text-muted">(<%= category.applications.count %>)</span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Apps -->
+    <% featured_apps = Application.includes(:category).top_rated.limit(3) %>
+    <% if featured_apps.any? %>
+      <div class="window-frame max-w-4xl mx-auto">
+        <div class="window-title-bar">
+          <span>⭐ 精选应用</span>
+        </div>
+        <div class="window-content">
+          <div class="space-y-4">
+            <% featured_apps.each do |app| %>
+              <div class="card-elevated">
+                <div class="card-body">
+                  <div class="flex items-start gap-4">
+                    <div class="text-5xl"><%= app.icon || "📦" %></div>
+                    <div class="flex-1">
+                      <h3 class="font-bold text-lg text-primary mb-1"><%= app.name %></h3>
+                      <p class="text-xs text-muted font-mono mb-2">
+                        <%= app.category.name %> | v<%= app.version %> | <%= app.developer %>
+                      </p>
+                      <p class="text-sm text-secondary mb-3"><%= app.description&.truncate(100) %></p>
+                      <div class="flex items-center gap-2">
+                        <% if app.rating %>
+                          <div class="badge badge-warning">⭐ <%= number_with_precision(app.rating, precision: 1) %></div>
+                        <% end %>
+                        <div class="badge badge-neutral">📥 <%= number_with_delimiter(app.downloads) %></div>
+                        <% if Current.user %>
+                          <%= link_to application_path(app), class: "btn-primary btn-sm ml-auto" do %>
+                            查看详情
+                          <% end %>
+                        <% else %>
+                          <%= link_to sign_in_path, class: "btn-neutral btn-sm ml-auto" do %>
+                            登录查看
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Info Alert -->
+    <% unless Current.user %>
+      <div class="max-w-4xl mx-auto mt-6">
+        <div class="alert alert-info">
+          <strong>💡 提示：</strong> <%= link_to "注册登录", sign_up_path, class: "font-bold underline" %>后即可浏览完整应用库并下载应用！
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

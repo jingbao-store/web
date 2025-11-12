@@ -1,0 +1,80 @@
+<div class="min-h-screen bg-surface p-4">
+  <div class="container mx-auto max-w-7xl">
+    <!-- Page Header -->
+    <div class="window-frame mb-6">
+      <div class="window-title-bar">
+        <span>📚 应用商店 - 浏览应用</span>
+      </div>
+      <div class="window-content">
+        <h1 class="text-2xl font-bold text-primary mb-2">镜宝应用库</h1>
+        <p class="text-secondary text-sm font-mono">Browse and download apps for your smart glasses</p>
+      </div>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="window-frame mb-6">
+      <div class="window-title-bar">
+        <span>🗂️ 应用分类</span>
+      </div>
+      <div class="window-content">
+        <div class="flex flex-wrap gap-2">
+          <%= link_to applications_path, class: "btn-neutral btn-sm #{@selected_category.nil? ? 'shadow-inset' : ''}" do %>
+            全部应用
+          <% end %>
+          <% @categories.each do |category| %>
+            <%= link_to applications_path(category_id: category.id), class: "btn-neutral btn-sm #{@selected_category&.id == category.id ? 'shadow-inset' : ''}" do %>
+              <%= category.icon %> <%= category.name %> (<%= category.applications.count %>)
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Grid -->
+    <% if @applications.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <% @applications.each do |app| %>
+          <div class="card-elevated">
+            <div class="card-body">
+              <div class="flex items-start gap-3 mb-3">
+                <div class="text-4xl"><%= app.icon || "📦" %></div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-bold text-base text-primary truncate"><%= app.name %></h3>
+                  <p class="text-xs text-muted font-mono">
+                    <%= app.category.name %> | v<%= app.version %>
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-sm text-secondary mb-3 line-clamp-2">
+                <%= app.description&.truncate(80) || "暂无描述" %>
+              </p>
+
+              <div class="flex items-center justify-between mb-3">
+                <% if app.rating.present? %>
+                  <div class="badge badge-warning">⭐ <%= number_with_precision(app.rating, precision: 1) %></div>
+                <% end %>
+                <div class="badge badge-neutral">📥 <%= number_with_delimiter(app.downloads) %></div>
+              </div>
+
+              <div class="flex gap-2">
+                <%= link_to application_path(app), class: "btn-primary btn-sm flex-1" do %>
+                  查看详情
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center">
+        <%= paginate @applications %>
+      </div>
+    <% else %>
+      <div class="alert alert-info">
+        <p class="font-mono">暂无应用。管理员正在努力收录更多应用...</p>
+      </div>
+    <% end %>
+  </div>
+</div>
