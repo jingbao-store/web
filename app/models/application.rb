@@ -40,4 +40,13 @@ class Application < ApplicationRecord
     return [] unless screenshots.attached?
     screenshots.map { |shot| Rails.application.routes.url_helpers.rails_blob_path(shot, only_path: true) }
   end
+
+  # 返回应用图标：优先 ActiveStorage 路径，否则回退为数据库中的 icon 字段
+  def icon_for_api
+    if self.icon.respond_to?(:attached?) && self.icon.attached?
+      Rails.application.routes.url_helpers.rails_blob_path(self.icon, only_path: true)
+    else
+      self[:icon]
+    end
+  end
 end

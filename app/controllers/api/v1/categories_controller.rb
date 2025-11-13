@@ -3,26 +3,54 @@ class Api::V1::CategoriesController < ApplicationController
   
   def index
     @categories = Category.ordered.includes(:applications)
-    render json: @categories.as_json(
-      only: [:id, :name, :slug, :icon, :description, :display_order],
-      include: {
-        applications: {
-          only: [:id, :name, :icon]
+    render json: @categories.map { |category|
+      {
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        icon: category.icon,
+        description: category.description,
+        display_order: category.display_order,
+        applications: category.applications.map { |app|
+          {
+            id: app.id,
+            name: app.name,
+            icon: app.icon_for_api
+          }
         }
       }
-    )
+    }
   end
 
   def show
     @category = Category.friendly.find(params[:id])
-    render json: @category.as_json(
-      only: [:id, :name, :slug, :icon, :description, :display_order],
-      include: {
-        applications: {
-          only: [:id, :name, :package_name, :version, :description, :icon, :download_url, :file_size, :file_size_bytes, :developer, :rating, :downloads, :last_updated, :min_android_version],
-          methods: [:permissions_array, :features_array]
+    render json: {
+      id: @category.id,
+      name: @category.name,
+      slug: @category.slug,
+      icon: @category.icon,
+      description: @category.description,
+      display_order: @category.display_order,
+      applications: @category.applications.map { |app|
+        {
+          id: app.id,
+          name: app.name,
+          package_name: app.package_name,
+          version: app.version,
+          description: app.description,
+          icon: app.icon_for_api,
+          download_url: app.download_url,
+          file_size: app.file_size,
+          file_size_bytes: app.file_size_bytes,
+          developer: app.developer,
+          rating: app.rating,
+          downloads: app.downloads,
+          last_updated: app.last_updated,
+          min_android_version: app.min_android_version,
+          permissions_array: app.permissions_array,
+          features_array: app.features_array
         }
       }
-    )
+    }
   end
 end
