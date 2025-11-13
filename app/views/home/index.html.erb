@@ -17,25 +17,15 @@
         
         <div class="flex justify-center gap-4">
           <% app_version = AppVersion.current %>
-          <% if Current.user %>
-            <%= link_to applications_path, class: "btn-primary btn-lg" do %>
-              📚 浏览应用
+          <%= link_to applications_path, class: "btn-primary btn-lg" do %>
+            📚 浏览应用
+          <% end %>
+          <% if app_version %>
+            <%= link_to app_version.download_url, class: "btn-secondary btn-lg", target: "_blank" do %>
+              📥 镜宝手机端
             <% end %>
-            <% if app_version %>
-              <%= link_to app_version.download_url, class: "btn-secondary btn-lg", target: "_blank" do %>
-                📥 镜宝手机端
-              <% end %>
-            <% end %>
-          <% else %>
-            <% if app_version %>
-              <%= link_to app_version.download_url, class: "btn-primary btn-lg", target: "_blank" do %>
-                📥 镜宝手机端
-              <% end %>
-            <% else %>
-              <%= link_to sign_up_path, class: "btn-primary btn-lg" do %>
-                🚀 立即注册
-              <% end %>
-            <% end %>
+          <% end %>
+          <% unless Current.user %>
             <%= link_to sign_in_path, class: "btn-secondary btn-lg" do %>
               🔑 登录
             <% end %>
@@ -90,18 +80,10 @@
       <div class="window-content">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <% categories.each do |category| %>
-            <% if Current.user %>
-              <%= link_to applications_path(category_id: category.id), class: "btn-neutral py-4 flex flex-col items-center" do %>
-                <span class="text-2xl mb-2"><%= category.icon %></span>
-                <span class="text-sm"><%= category.name %></span>
-                <span class="text-xs text-muted">(<%= category.applications.count %>)</span>
-              <% end %>
-            <% else %>
-              <div class="btn-neutral py-4 flex flex-col items-center opacity-75">
-                <span class="text-2xl mb-2"><%= category.icon %></span>
-                <span class="text-sm"><%= category.name %></span>
-                <span class="text-xs text-muted">(<%= category.applications.count %>)</span>
-              </div>
+            <%= link_to applications_path(category_id: category.id), class: "btn-neutral py-4 flex flex-col items-center" do %>
+              <span class="text-2xl mb-2"><%= category.icon %></span>
+              <span class="text-sm"><%= category.name %></span>
+              <span class="text-xs text-muted">(<%= category.applications.count %>)</span>
             <% end %>
           <% end %>
         </div>
@@ -139,14 +121,8 @@
                           <div class="badge badge-warning">⭐ <%= number_with_precision(app.rating, precision: 1) %></div>
                         <% end %>
                         <div class="badge badge-neutral">📥 <%= number_with_delimiter(app.downloads) %></div>
-                        <% if Current.user %>
-                          <%= link_to application_path(app), class: "btn-primary btn-sm ml-auto" do %>
-                            查看详情
-                          <% end %>
-                        <% else %>
-                          <%= link_to sign_in_path, class: "btn-neutral btn-sm ml-auto" do %>
-                            登录查看
-                          <% end %>
+                        <%= link_to application_path(app), class: "btn-primary btn-sm ml-auto" do %>
+                          查看详情
                         <% end %>
                       </div>
                     </div>
@@ -163,7 +139,7 @@
     <% unless Current.user %>
       <div class="max-w-4xl mx-auto mt-6">
         <div class="alert alert-info">
-          <strong>💡 提示：</strong> <%= link_to "注册登录", sign_up_path, class: "font-bold underline" %>后即可浏览完整应用库并下载应用！
+          <strong>💡 提示：</strong> <%= link_to "注册登录", sign_up_path, class: "font-bold underline" %>后即可下载所有应用！
         </div>
       </div>
     <% end %>

@@ -1,6 +1,4 @@
 class ApplicationsController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     @categories = Category.ordered.includes(:applications)
     @applications = if params[:category_id].present?
