@@ -22,6 +22,7 @@ class Api::V1::ApplicationsController < ApplicationController
       include: { category: { only: [:id, :name, :slug, :icon] } },
       methods: [:permissions_array, :features_array]
     )
+    data['icon'] = @application.icon_for_api
     data['screenshots'] = @application.screenshot_urls
     render json: data
   end
