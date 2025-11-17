@@ -43,6 +43,10 @@ Rails.application.configure do
   # Use Rails.application.routes not config.default_url_options
   Rails.application.routes.default_url_options = host_and_port_and_protocol
   config.action_mailer.default_url_options = host_and_port_and_protocol
+  
+  # Configure ActiveStorage to use the correct host for URLs
+  config.action_controller.default_url_options = host_and_port_and_protocol
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
   if ENV["EMAIL_SMTP_PASSWORD"].present?
     config.action_mailer.smtp_settings = {

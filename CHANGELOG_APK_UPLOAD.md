@@ -4,6 +4,8 @@
 - **功能**: APK 上传支持
 - **日期**: 2025-11-16
 - **状态**: ✅ 已完成
+- **修复日期**: 2025-11-17
+- **修复内容**: 修复生产环境 URL 生成问题
 
 ## 功能概述
 
@@ -188,7 +190,74 @@ chmod -R 755 storage/
 - ✅ 功能测试通过
 - ✅ API 集成测试通过
 - ✅ Linter 检查通过
-- ⏳ 生产环境测试待进行
+- ✅ 生产环境 URL 修复完成
+
+## 2025-11-17 更新：生产环境 URL 修复
+
+### 问题描述
+在生产环境中，API 返回的 `download_url` 显示为 `http://localhost:3000/...` 而不是 `https://jingbao.store/...`，导致应用详情页显示"暂无下载链接"。
+
+### 修复内容
+
+#### 1. 增强 `final_download_url` 方法
+- 添加异常处理和日志记录
+- 添加备用 URL 构建方法 `build_full_url`
+- 确保使用 `default_url_options` 传递给 URL 生成器
+
+#### 2. 完善环境配置
+- 在 `production.rb` 中添加 `config.action_controller.default_url_options`
+- 在 `production.rb` 中添加 `config.active_storage.resolve_model_to_route`
+- 在 `development.rb` 中同步添加配置
+
+#### 3. 添加诊断工具
+- 创建 `bin/test-apk-urls` 测试脚本
+- 自动检测配置问题
+- 提供修复建议
+
+#### 4. 完善文档
+- 创建 `docs/PRODUCTION_URL_CONFIG.md` - 详细配置指南
+- 创建 `APK_URL_FIX.md` - 快速修复指南
+- 包含故障排查步骤
+
+### 使用方法
+
+#### 快速修复（生产环境）
+
+```bash
+# 1. 设置环境变量
+export PUBLIC_HOST=jingbao.store
+
+# 2. 重启 Rails 应用
+sudo systemctl restart jingbao-webapp
+
+# 3. 验证修复
+RAILS_ENV=production bin/test-apk-urls
+```
+
+#### 测试 API
+
+```bash
+curl https://jingbao.store/api/v1/applications/10 | jq '.download_url'
+# 应该输出: "https://jingbao.store/rails/active_storage/blobs/..."
+```
+
+### 修改的文件
+
+1. `app/models/application.rb` - 增强 URL 生成逻辑
+2. `config/environments/production.rb` - 添加 ActiveStorage 配置
+3. `config/environments/development.rb` - 同步配置
+4. `bin/test-apk-urls` - 新增诊断脚本
+5. `docs/PRODUCTION_URL_CONFIG.md` - 新增配置文档
+6. `APK_URL_FIX.md` - 新增快速修复指南
+
+### 验证清单
+
+- [x] `final_download_url` 方法增强完成
+- [x] 环境配置文件更新完成
+- [x] 测试脚本创建完成
+- [x] 文档更新完成
+- [x] 代码 Lint 检查通过
+- [ ] 生产环境验证（需要设置 `PUBLIC_HOST`）
 
 ## 回滚计划
 

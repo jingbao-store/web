@@ -55,7 +55,16 @@ class Application < ApplicationRecord
   # 返回最终的下载 URL：优先使用上传的 APK 文件，否则使用 download_url 字段
   def final_download_url
     if apk_file.attached?
-      Rails.application.routes.url_helpers.rails_blob_url(apk_file, only_path: false)
+      # 使用 ActiveStorage 的 URL 生成器，确保包含完整的 host 信息
+      begin
+        url_options = Rails.application.routes.default_url_options
+        Rails.application.routes.url_helpers.rails_blob_url(apk_file, **url_options)
+      rescue => e
+        Rails.logger.error("Error generating APK URL: #{e.message}")
+        # 如果生成失败，尝试使用相对路径并手动构建完整 URL
+        path = Rails.application.routes.url_helpers.rails_blob_path(apk_file, only_path: true)
+        build_full_url(path)
+      end
     else
       download_url
     end
@@ -95,5 +104,25 @@ class Application < ApplicationRecord
     else
       "#{size.round(2)} #{units[exponent]}"
     end
+  end
+
+  # 构建完整的 URL（用于 APK 文件）
+  def build_full_url(path)
+    return path if path.blank? || path.start_with?('http')
+    
+    url_options = Rails.application.routes.default_url_options
+    protocol = url_options[:protocol] || 'https'
+    host = url_options[:host] || 'localhost'
+    port = url_options[:port]
+    
+    # 构建基础 URL
+    base_url = "#{protocol}://#{host}"
+    
+    # 只在非标准端口时添加端口号（http 的 80 和 https 的 443 是标准端口）
+    if port && !((protocol == 'https' && port == 443) || (protocol == 'http' && port == 80))
+      base_url += ":#{port}"
+    end
+    
+    "#{base_url}#{path}"
   end
 end

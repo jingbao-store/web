@@ -1,0 +1,172 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# 测试 APK 文件 URL 生成是否正确
+# 使用方法: RAILS_ENV=production bin/test-apk-urls
+
+require_relative '../config/environment'
+
+puts "=" * 80
+puts "APK URL 配置测试"
+puts "=" * 80
+puts
+
+# 1. 检查环境配置
+puts "📋 1. 检查环境配置"
+puts "-" * 40
+
+url_options = Rails.application.routes.default_url_options
+puts "Host: #{url_options[:host]}"
+puts "Port: #{url_options[:port]}"
+puts "Protocol: #{url_options[:protocol]}"
+puts
+
+expected_host = ENV['PUBLIC_HOST'] || 'localhost'
+if url_options[:host] == expected_host
+  puts "✅ Host 配置正确"
+else
+  puts "❌ Host 配置错误！"
+  puts "   预期: #{expected_host}"
+  puts "   实际: #{url_options[:host]}"
+end
+puts
+
+# 2. 检查有 APK 文件的应用
+puts "📋 2. 检查已上传 APK 的应用"
+puts "-" * 40
+
+apps_with_apk = Application.joins(:apk_file_attachment).distinct
+puts "找到 #{apps_with_apk.count} 个已上传 APK 的应用"
+puts
+
+if apps_with_apk.empty?
+  puts "⚠️  没有找到已上传 APK 的应用"
+  puts "   请先在后台上传 APK 文件"
+  exit
+end
+
+# 3. 测试 URL 生成
+puts "📋 3. 测试 URL 生成"
+puts "-" * 40
+
+apps_with_apk.limit(5).each do |app|
+  puts "\n应用: #{app.name} (ID: #{app.id})"
+  puts "  Package: #{app.package_name}"
+  
+  if app.apk_file.attached?
+    puts "  ✅ APK 已附加"
+    puts "  文件名: #{app.apk_file.filename}"
+    puts "  大小: #{number_to_human_size(app.apk_file.byte_size)}"
+    
+    begin
+      download_url = app.final_download_url
+      
+      if download_url.nil?
+        puts "  ❌ download_url 为 nil"
+      elsif download_url.start_with?('http://localhost') || download_url.include?(':3000')
+        puts "  ⚠️  URL 使用 localhost (可能不正确)"
+        puts "     URL: #{download_url}"
+      elsif download_url.start_with?("https://#{expected_host}")
+        puts "  ✅ URL 生成正确"
+        puts "     URL: #{download_url}"
+      else
+        puts "  ⚠️  URL 主机不匹配"
+        puts "     URL: #{download_url}"
+      end
+    rescue => e
+      puts "  ❌ 生成 URL 时出错: #{e.message}"
+      puts "     #{e.backtrace.first}"
+    end
+  else
+    puts "  ❌ APK 未附加"
+  end
+end
+
+puts
+puts
+
+# 4. 测试 API 响应
+puts "📋 4. 测试 API 响应"
+puts "-" * 40
+
+if apps_with_apk.any?
+  app = apps_with_apk.first
+  puts "\n测试应用: #{app.name} (ID: #{app.id})"
+  
+  # 模拟 API 响应
+  data = app.as_json(
+    only: [:id, :name, :package_name, :version, :file_size],
+    methods: []
+  )
+  data['download_url'] = app.final_download_url
+  
+  puts "\nAPI 响应示例:"
+  puts JSON.pretty_generate(data)
+end
+
+puts
+puts
+
+# 5. 诊断建议
+puts "📋 5. 诊断建议"
+puts "-" * 40
+puts
+
+issues = []
+
+if url_options[:host] == 'localhost'
+  issues << "需要设置 PUBLIC_HOST 环境变量"
+end
+
+if apps_with_apk.empty?
+  issues << "没有已上传 APK 的应用"
+end
+
+if issues.empty?
+  puts "✅ 所有检查通过！"
+  puts
+  puts "如果 API 仍然返回错误的 URL，请尝试："
+  puts "1. 重启 Rails 应用"
+  puts "2. 清除缓存: rails cache:clear"
+  puts "3. 检查 Nginx/Apache 配置"
+else
+  puts "❌ 发现以下问题："
+  issues.each_with_index do |issue, index|
+    puts "#{index + 1}. #{issue}"
+  end
+  puts
+  puts "修复建议："
+  if url_options[:host] == 'localhost'
+    puts "• 在生产环境设置: export PUBLIC_HOST=jingbao.store"
+    puts "• 然后重启 Rails 应用"
+  end
+  if apps_with_apk.empty?
+    puts "• 登录后台 /admin/applications"
+    puts "• 编辑应用并上传 APK 文件"
+  end
+end
+
+puts
+puts "=" * 80
+puts "测试完成"
+puts "=" * 80
+
+# Helper method
+def number_to_human_size(bytes)
+  return "0 B" if bytes.nil? || bytes == 0
+  
+  units = ['B', 'KB', 'MB', 'GB', 'TB']
+  exponent = (Math.log(bytes) / Math.log(1024)).floor
+  exponent = [exponent, units.length - 1].min
+  
+  size = bytes.to_f / (1024 ** exponent)
+  
+  if size >= 100
+    "#{size.round(0).to_i} #{units[exponent]}"
+  elsif size >= 10
+    "#{size.round(1)} #{units[exponent]}"
+  else
+    "#{size.round(2)} #{units[exponent]}"
+  end
+end
+
