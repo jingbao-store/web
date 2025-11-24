@@ -113,9 +113,9 @@
 
         <!-- Download Button -->
         <div class="pt-6 border-t-2 border-border">
-          <% if @application.download_url.present? %>
+          <% if @application.final_download_url.present? %>
             <% if Current.user %>
-              <%= link_to @application.download_url, class: "btn-primary btn-lg w-full text-center", target: "_blank" do %>
+              <%= link_to @application.final_download_url, class: "btn-primary btn-lg w-full text-center", target: "_blank" do %>
                 📥 下载APK (<%= @application.file_size || "未知大小" %>)
               <% end %>
               <p class="text-xs text-muted text-center mt-3 font-mono">
